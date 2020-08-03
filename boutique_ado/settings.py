@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount'
 ]
 
 MIDDLEWARE = [
@@ -59,6 +63,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
+                # required by allauth
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -66,6 +71,37 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SITE_ID = 1
+
+# by default allauth will send confirmation emails to any new accounts.
+# We need to temporarily log those emails to the console so we can get
+#  the confirmation links.
+# To do that we can set:
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# tells allauth that we want to allow AUTHENTICATION
+# using email or username
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+# ensure that email is required upon registration
+ACCOUNT_EMAIL_REQUIRED = True
+# users most verify their emails
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# users most enter email 2wice
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+# usename min of 4 char
+ACCOUNT_USERNAME_MIN_LENGTH = 4
+# login url
+LOGIN_URL = '/accounts/login/'
+# redirect after login
+LOGIN_REDIRECT_URL = '/'
 
 WSGI_APPLICATION = 'boutique_ado.wsgi.application'
 
