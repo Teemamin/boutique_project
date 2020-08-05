@@ -4,6 +4,10 @@ from django.db import models
 
 
 class Category(models.Model):
+    class Meta:
+        verbose_name_plural = 'Categories'
+        # added the class meta to make d category name into categories for plural
+
     name = models.CharField(max_length=254)
     friendly_name = models.CharField(max_length=254, null=True, blank=True)
 
