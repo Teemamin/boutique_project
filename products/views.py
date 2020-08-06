@@ -1,5 +1,7 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Product
+from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.contrib import messages
+from django.db.models import Q
+from .models import Product, Category
 
 # Create your views here.
 
@@ -8,8 +10,49 @@ def all_products(request):
     """A view to show all products including search n sort"""
 
     products = Product.objects.all()
+    query = None  # to ensure we dnt get an error wen loading
+    # the page,cos at this stage error is empty
+    categories = None
+    sort = None
+    direction = None
+    
+
+    if request.GET:
+        if 'sort' in request.GET:
+            sortkey = request.GET['sort']
+            sort = sortkey
+            if sortkey == 'name':
+                sortkey = 'lower_name'
+                products = products.annotate(lower_name=Lower('name'))
+            if 'direction' in request.GET:
+                direction = request.GET['direction']
+                if direction == 'desc':
+                    sortkey = f'-{sortkey}'
+            products = products.order_by(sortkey)
+
+        if 'category' in request.GET:
+            categories = request.GET['category'].split(',')
+            products = products.filter(category__name__in=categories)
+            categories = Category.objects.filter(name__in=categories)
+
+        if 'q' in request.GET:
+            query = request.GET['q']
+            if not query:
+                messages.error(request, "You didn't enter any search criteria!")
+                return redirect(reverse('products'))
+            # chks if reqest is get,n q is in d request it assigns
+            # the value of the request to a var
+            # query, chks if it is empty,uses django builtin messages to
+            # tell the user nothinng was entered and redirects to prdcts
+            queries = Q(name__icontains=query) | Q(description__icontains=query)
+            products = products.filter(queries)
+   
+    current_sorting = f'{sort}_{direction}'
+    
     context = {
-        'products': products
+        'products': products,
+        'search_term': query,
+        'current_categories': categories,
     }
     return render(request, 'products/products.html', context)
 
