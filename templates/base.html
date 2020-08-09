@@ -112,7 +112,23 @@
     </header>
 
     {% if messages %}
-        <div class="message-container"></div>
+         <div class="message-container">
+         <!--django has message classifiers like debug info error and so on for different message types.-->
+            {% for message in messages %}
+                {% with message.level as level %}
+                    {% if level == 40 %} <!--level 40 is error-->
+                        {% include 'includes/toasts/toast_error.html' %}
+                    {% elif level == 30 %} <!--level 30 is warning-->
+                        {% include 'includes/toasts/toast_warning.html' %}
+                    {% elif level == 25 %} <!--level 25 is success-->
+                        {% include 'includes/toasts/toast_success.html' %}
+                    {% else %}
+                        {% include 'includes/toasts/toast_info.html' %}
+                        <!--And will default to using the info toast for everything else.-->
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+        </div>
     {% endif %}
 
     {% block page_header %}
@@ -122,6 +138,10 @@
     {% endblock %}
 
     {% block postloadjs %}
+    <!--bootstrap toast js-->
+       <script type="text/javascript">
+        $('.toast').toast('show');
+       </script>
     {% endblock %}
 
     
