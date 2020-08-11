@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'home',
     'products',
     'bag',
-    'checkout'
+    'checkout',
+    # other
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +60,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'boutique_ado.urls'
+
+# tells crispy forms which template pack
+# we want to use
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATES = [
     {
@@ -75,8 +81,19 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # MEDIA_URL template tag we created needs it
+                # to access the media folder,if a product
+                # has no image
+                'django.template.context_processors.media',
                 'bag.contexts.bag_contents',
             ],
+            # addin a list called built-ins which will contain all
+            # the tags we want available in all our templates by default.
+            # from crispy_forms.template
+            'builtins': [
+                'crispy_forms.templatetags.crispy_forms_tags',
+                'crispy_forms.templatetags.crispy_forms_field',
+            ]
         },
     },
 ]
