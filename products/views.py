@@ -15,7 +15,7 @@ def all_products(request):
     # the page,cos at this stage error is empty
     categories = None
     sort = None
-    direction = None   
+    direction = None
  
     if request.GET:
         if 'sort' in request.GET:
