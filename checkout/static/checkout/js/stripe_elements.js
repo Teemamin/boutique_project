@@ -61,6 +61,8 @@ form.addEventListener('submit', function(ev) {
     // out to stripe to avoid multiple submissions
     card.update({ 'disabled': true});
     $('#submit-button').attr('disabled', true);
+    $('#payment-form').fadeToggle(100); //to fadeout the payment form wen user submits
+    $('#loading-overlay').fadeToggle(100); // activate the overlay div
     stripe.confirmCardPayment(clientSecret, {
         payment_method: {
             card: card,
@@ -74,6 +76,8 @@ form.addEventListener('submit', function(ev) {
                 </span>
                 <span>${result.error.message}</span>`;
             $(errorDiv).html(html);
+            $('#payment-form').fadeToggle(100); // reverse wen there is an error
+            $('#loading-overlay').fadeToggle(100);
             // if there is an error we will reenable the card element
             // and submit btn to allow the user to fix it
             card.update({ 'disabled': false});

@@ -23,8 +23,18 @@ def update_on_save(sender, instance, created, **kwargs):
 
 
 @receiver(post_delete, sender=OrderLineItem)
-def update_on_save(sender, instance, **kwargs):
+def delete_on_save(sender, instance, **kwargs):
     """
     Update order total on lineitem delete
     """
     instance.order.update_total()
+
+
+"""
+ the post_save and post_delete are django's builtin signals
+ that let user code get notified by Django itself of certain actions
+ post_save : Sent after a model’s save() method is called.
+ post_delete: Sent after a model’s delete() method or queryset’s delete()
+  method is called.
+  https://docs.djangoproject.com/en/3.0/topics/signals/
+"""

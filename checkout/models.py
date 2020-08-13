@@ -46,7 +46,10 @@ class Order(models.Model):
         # on this order.The default behaviour is to add a new field
         # to the query set calledline-item total sum.
         # Which we can then get and set the order total to that.
-        self.order_total = self.lineitems.aggregate(Sum('lineitem_total'))['lineitem_total__sum']
+        self.order_total = self.lineitems.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or 0
+        # addn or 0 ensures that we dont get an erro
+        # wen we manually delete orderline items frm an
+        # order, by makin sure it sets it to zero instd of none
         if self.order_total < settings.FREE_DELIVERY_THRESHOLD:
             self.delivery_cost = self.order_total * settings.STANDARD_DELIVERY_PERCENTAGE / 100
         else:
@@ -70,8 +73,9 @@ class Order(models.Model):
 
 
 class OrderLineItem(models.Model):
-    # A line-item will be like an individual shopping bag item. Relating to a specific order
-    # And referencing the product itself. The size that was selected. The quantity.
+    # A line-item will be like an individual shopping bag item.
+    # Relating to a specific order And referencing the product
+    # itself. The size that was selected. The quantity.
     order = models.ForeignKey(Order, null=False, blank=False, on_delete=models.CASCADE, related_name='lineitems')
     product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.CASCADE)
     product_size = models.CharField(max_length=2, null=True, blank=True) # XS, S, M, L, XL

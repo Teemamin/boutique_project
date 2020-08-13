@@ -65,7 +65,7 @@ def checkout(request):
                     order.delete()
                     return redirect(reverse('view_bag'))
             # if a user wants to save their info we will redirect them
-            # to chechout success page and pass in order # as argument
+            # to checkout success page and pass in order # as argument
             request.session['save_info'] = 'save-info' in request.POST
             return redirect(reverse('checkout_success',
                             args=[order.order_number]))
@@ -118,6 +118,8 @@ def checkout_success(request, order_number):
     # gets the saveinfo details from session request
     # which was added above from the form post data
     save_info = request.session.get('save_info')
+    # order_number recived in this functn is the 
+    # arg passed frm chkout view:order.order_number
     order = get_object_or_404(Order, order_number=order_number)
     messages.success(request, f'Order successfully processed! \
         Your order number is {order_number}. A confirmation \
