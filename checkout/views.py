@@ -12,7 +12,9 @@ import stripe
 import json
 # Create your views here.
 
-
+# b4 we call the confirmcard payment method in
+# strip_elements.js we will make a post rqst to
+# this view n give it d clientsecret frm d paymentintent
 @require_POST
 def cache_checkout_data(request):
     # see notes for explanation

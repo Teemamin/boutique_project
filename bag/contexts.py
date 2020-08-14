@@ -10,7 +10,7 @@ def bag_contents(request):
     product_count = 0
     # chk if var bag exist in request session,if it doesn't add
     bag = request.session.get('bag', {})
-    print(bag)
+    
     # for is looping through the var bag request session
     for item_id, item_data in bag.items():
         # If d instance is an integer then we know the item data is
