@@ -35,6 +35,16 @@
     color: #000;
     border: 1px solid #000;
 }
+/* makes select elemet n their childrn to be blck by default**/
+select,
+select option {
+    color: #000000;
+}
+/* select box to grey if no value selected **/
+select:invalid,
+select option[value=""] {
+    color: #aab7c4 !important;
+}
 
 #loading-overlay {
 	display: none;

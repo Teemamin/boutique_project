@@ -57,7 +57,15 @@ def checkout(request):
         order_form = OrderForm(form_data)
         # if the form is valid,save the order
         if order_form.is_valid():
-            order = order_form.save()
+            # used commit=false to prevent multiple save events in database
+            order = order_form.save(commit=False)
+            # gets clientsecret id
+            pid = request.POST.get('client_secret').split('_secret')[0]
+            # adds the clientsecret id to order model stripe_pid field
+            order.stripe_pid = pid
+            # adds order shopping bag to order model original_bag field
+            order.original_bag = json.dumps(bag)
+            order.save()
             # see ur notes for further explanations
             for item_id, item_data in bag.items():
                 try:
