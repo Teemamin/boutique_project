@@ -7,7 +7,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         # __all__ means is called all
-        # which will include all the fields
+        # which will include all the fields frm product model
         fields = '__all__'
     # override the init method to make a couple changes to the fields.
 

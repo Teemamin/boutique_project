@@ -51,7 +51,7 @@ def all_products(request):
             # tell the user nothinng was entered and redirects to prdcts
             queries = Q(name__icontains=query) | Q(description__icontains=query)
             products = products.filter(queries)
-   
+
     current_sorting = f'{sort}_{direction}'
 
     context = {
@@ -75,7 +75,21 @@ def product_detail(request, product_id):
 
 def add_product(request):
     """ Add a product to the store """
-    form = ProductForm()
+    if request.method == 'POST':
+        # instantiate a new instance of the product form from request.post
+        # and include request .files to allow us capture images
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Successfully added product!')
+            # redirect to the same view.
+            return redirect(reverse('add_product'))
+        # if there is an error
+        else:
+            messages.error(request, 'Failed to add product. Please ensure the form is valid.')
+    else:
+        form = ProductForm()
+        
     template = 'products/add_product.html'
     context = {
         'form': form,

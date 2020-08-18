@@ -17,9 +17,13 @@ def profile(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Profile updated successfully')
+        else:
+            messages.error(request, 'Update failed. Please ensure\
+                 the form is valid.')
+    else:
 
-    # populate the form with the current user info
-    form = UserProfileForm(instance=profile)
+        # populate the form with the current user info
+        form = UserProfileForm(instance=profile)
     # usin d profile n  related name on the order model
     # to get user orders
     orders = profile.orders.all()
