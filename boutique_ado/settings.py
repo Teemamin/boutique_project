@@ -27,7 +27,7 @@ SECRET_KEY = '(&y^y3b_w+zj58y*f$q0ll#e#x3c&r2sk+$!pyc+ewxauh(w!e'
 DEBUG = True
 
 # hostname of our heroku app n localhost is added so gitpod will work too
-ALLOWED_HOSTS = ['https://boutique-ado-project.herokuapp.com/', 'localhost']
+ALLOWED_HOSTS = ['boutique-ado-project.herokuapp.com', 'localhost']
 
 
 # Application definition
