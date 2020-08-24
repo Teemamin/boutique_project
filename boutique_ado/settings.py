@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'profiles',
     # other
     'crispy_forms',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -205,6 +206,30 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+if 'USE_AWS' in os.environ:
+    # Bucket Config
+    AWS_STORAGE_BUCKET_NAME = 'boutique-ado-project'
+    AWS_S3_REGION_NAME = ' EU (Ireland)'
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    # it tells django where our static files will be coming from in production.
+    # bucket name from above will be interpreted and added to generate the
+    # appropriate URL
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
+    # Static and media files
+    # for static file storage we want to use our storage class
+    # defined in custom_storages.py
+    STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+    # the location it should save static files is a folder called static.
+    STATICFILES_LOCATION = 'static'
+    DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
+    MEDIAFILES_LOCATION = 'media'
+
+    # Override static and media URLs in production
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
 
 
 # Stripe
